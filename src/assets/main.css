@@ -1,0 +1,56 @@
+@import './base.css';
+
+* {
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+*::-webkit-scrollbar {
+  width: 3px; 
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--neutral-200); 
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--neutral-500); 
+  border-radius: 3px;
+  border: 2px solid transparent; 
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--neutral-500);  
+}
+
+* {
+  scrollbar-color: var(--neutral-500) var(--neutral-200);  
+  scrollbar-width: thin;
+}
+
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: Inter, sans-serif;
+  font-weight: 600;
+  color: var(--color-heading);
+}
+
+h1 {
+  font-size: 18px;
+  line-height: 1.5em;
+}
+
+a {
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+ul, ol {
+  list-style: none;
+  padding: 0;
+}
