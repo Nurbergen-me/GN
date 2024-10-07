@@ -55,7 +55,7 @@ const updateSelectedItems = (item, isChecked) => {
 const reset = () => {
   search.value = ''
   selectedItems.value = []
-  updateSelectedItems()
+  emit('update:selectedItems', selectedItems)
 }
 
 const multiselectRef = ref(null)
