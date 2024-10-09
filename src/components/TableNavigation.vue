@@ -32,9 +32,9 @@ const selectedFormats = ref<string[]>([])
 
 const handleSelectedItems = (items: (string | number)[], type: string) => {
   if (type === 'year') {
-    selectedYears.value = [...items as number[]]
+    selectedYears.value = items as number[]
   } else if (type === 'format') {
-    selectedFormats.value = [...items as string[]]
+    selectedFormats.value = items as string[]
   }
 }
 

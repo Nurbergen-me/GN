@@ -36,6 +36,7 @@ const handleChange = (event: Event) => {
     <input
       type="checkbox"
       :value="props.value"
+      :name="props.value.toString()"
       :checked="checked"
       @change="handleChange"
       :disabled="disabled"

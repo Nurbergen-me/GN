@@ -39,6 +39,7 @@ const emit = defineEmits<{
       :placeholder="placeholder"
       :disabled="disabled"
       :value="modelValue"
+      :name="placeholder"
       @input="handleChange"
       :class="{'disabled': disabled}" 
     />
