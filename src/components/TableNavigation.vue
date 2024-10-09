@@ -1,33 +1,40 @@
-<script setup>
+<script setup lang="ts">
 import { ref, defineProps, defineEmits } from "vue";
 import SearchIcon from './icons/SearchIcon.vue'
 import CalendarIcon from './icons/CalendarIcon.vue'
+import BaseMultiselect from "./BaseMultiselect.vue";
+import { FormData } from "@/types/bookTypes";
 
-const emit = defineEmits(['searchBooks', 'resetTable'])
+interface Emits {
+  (event: 'searchBooks', formData: FormData): void;
+  (event: 'resetTable'): void;
+}
+
+const emit = defineEmits<Emits>()
 const props = defineProps({
   search: {
     type: String,
     default: ''
   },
   bookFormats: {
-    type: Array,
+    type: Array as () => string[],
     default: []
   },
   publishYears: {
-    type: Array,
+    type: Array as () => number[],
     default: []
   }
 })
 
 const search = ref('')
-const selectedYears = ref([])
-const selectedFormats = ref([])
+const selectedYears = ref<number[]>([])
+const selectedFormats = ref<string[]>([])
 
-const handleSelectedItems = (items, type) => {
+const handleSelectedItems = (items: (string | number)[], type: string) => {
   if (type === 'year') {
-    selectedYears.value = [...items.value]
+    selectedYears.value = [...items as number[]]
   } else if (type === 'format') {
-    selectedFormats.value = [...items.value]
+    selectedFormats.value = [...items as string[]]
   }
 }
 
@@ -35,23 +42,23 @@ const handleSearch = () => {
   if (props.search !== search.value) {
     resetForm(false)
   }
-  const formData = {
+  const formData: FormData = {
     search: search.value,
-    years: selectedYears.value,
-    formats: selectedFormats.value
+    years: selectedYears.value as number[],
+    formats: selectedFormats.value as string[]
   }
-  emit('searchBooks', formData)
+  emit('searchBooks', formData as FormData)
 }
 
-const yearSelectRef = ref(null)
-const formatSelectRef = ref(null)
+const yearSelectRef = ref<InstanceType<typeof BaseMultiselect> | null>(null)
+const formatSelectRef = ref<InstanceType<typeof BaseMultiselect> | null>(null)
 
 const resetForm = (withSearch = true) => {
   if (withSearch) {
     search.value = ''
   }
-  yearSelectRef.value.reset()
-  formatSelectRef.value.reset()
+  yearSelectRef.value?.reset()
+  formatSelectRef.value?.reset()
   emit('resetTable')
 }
 

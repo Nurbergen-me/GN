@@ -1,33 +1,34 @@
-<script setup>
+<script setup lang="ts">
 import { reactive } from 'vue'
 import TableNavigation from './TableNavigation.vue'
+import { Book, FormData } from '@/types/bookTypes';
 import axios from 'axios'
 
 const state = reactive({
   isLoading: false,
   search: '',
-  books: [],
-  bookFormats: [],
-  publishYears: [],
+  books: [] as Book[],
+  bookFormats: [] as string[],
+  publishYears: [] as number[],
 })
 
-const getAuthorNames = (authors) => {
+const getAuthorNames = (authors: string[]) => {
   return authors?.join(', ')
 }
 
-const getSelectedYears = (years) => {
+const getSelectedYears = (years: number[]) => {
   if (years.length === 0) return ''
   const minYear = Math.min(...years)
   const maxYear = Math.max(...years)
   return `first_publish_year:[${minYear} TO ${maxYear}]`
 }
 
-const getSelectedFormats = (formats) => {
+const getSelectedFormats = (formats: string[]) => {
   if (formats.length === 0) return ''
   return 'format: ' + formats.join(' ')
 }
 
-const searchBooks = async (data) => {
+const searchBooks = async (data: FormData) => {
   const selectedYears = getSelectedYears(data.years)
   const selectedFormats = getSelectedFormats(data.formats)
   state.isLoading = true
@@ -44,13 +45,13 @@ const searchBooks = async (data) => {
     }
     state.search = data.search
   } catch (error) {
-    console('Error loading books', error)
+    console.error('Error loading books', error)
   } finally {
     state.isLoading = false
   }
 }
 
-const getYears = (data) => {
+const getYears = (data: Book[]) => {
   const years = data
     .map((book) => book.first_publish_year)
     .filter((year) => year !== undefined)
@@ -58,7 +59,7 @@ const getYears = (data) => {
   state.publishYears = uniqueYears
 }
 
-const normalizeFormat = (format) => {
+const normalizeFormat = (format: string) => {
   const normalized = format
     .toLowerCase()
     .replace(/[^a-z0-9\s]/g, '')
@@ -66,7 +67,7 @@ const normalizeFormat = (format) => {
   return normalized.charAt(0).toUpperCase() + normalized.slice(1)
 }
 
-const getFormats = (data) => {
+const getFormats = (data: Book[]) => {
   const formats = data.flatMap((book) => book.format || [])
   const normalizedFormats = formats.map(normalizeFormat)
   const uniqueFormats = [...new Set(normalizedFormats)]
@@ -108,7 +109,7 @@ const resetTable = () => {
             </td>
           </tr>
           <template v-else>
-            <tr v-for="book in state.books" :key="book.key">
+            <tr v-for="book in state.books" :key="book.title">
               <td class="name">
                 {{ book.title }}
               </td>

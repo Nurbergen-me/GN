@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import {
   ref,
   defineProps,
@@ -9,24 +9,26 @@ import {
 } from 'vue'
 import SearchIcon from './icons/SearchIcon.vue'
 
-const emit = defineEmits(['update:selectedItems'])
+const emit = defineEmits<{
+  (event: 'update:selectedItems', value: (string | number)[]): void;
+}>()
 const props = defineProps({
   label: {
     type: String,
     required: true,
   },
   data: {
-    type: Array,
+    type: Array as () => (string | number)[],
     default: () => [],
   },
 })
 
 const isDropdownOpen = ref(false)
 const search = ref('')
-const selectedItems = ref([])
-const checkbox = ref([])
+const selectedItems = ref<(string | number)[]>([])
+const checkbox = ref<string[]>([])
 
-const filteredData = computed(() => {
+const filteredData = computed<(string | number)[]>(() => {
   if (search.value.length === 0 ) return props.data
 
   return props.data.filter((item) => {
@@ -42,25 +44,25 @@ const filteredData = computed(() => {
   })
 })
 
-const updateSelectedItems = (item, isChecked) => {
+const updateSelectedItems = (item: string | number, isChecked: boolean) => {
   if (isChecked) {
-    selectedItems.value.push(item);
+    selectedItems.value.push(item as string);
   } else {
     selectedItems.value = selectedItems.value.filter(selected => selected !== item);
   }
 
-  emit('update:selectedItems', selectedItems)
+  emit('update:selectedItems', selectedItems.value)
 }
 
 const reset = () => {
   search.value = ''
   selectedItems.value = []
-  emit('update:selectedItems', selectedItems)
+  emit('update:selectedItems', selectedItems.value)
 }
 
-const multiselectRef = ref(null)
-const handleClickOutside = (event) => {
-  if (multiselectRef.value && !multiselectRef.value.contains(event.target)) {
+const multiselectRef = ref<HTMLElement | null>(null)
+const handleClickOutside = (event: Event) => {
+  if (multiselectRef.value && !multiselectRef.value.contains(event.target as Node)) {
     isDropdownOpen.value = false
   }
 }

@@ -1,18 +1,34 @@
-<script setup>
-import { defineProps, defineEmits } from 'vue';
+<script setup lang="ts">
+import { defineProps, defineEmits, PropType } from 'vue';
 import CheckIcon from './icons/CheckIcon.vue'
 
 const props = defineProps({
-  modelValue: Boolean,
-  value: String | Number,
-  checked: Boolean,
+  modelValue: {
+    type: Boolean,
+    default: false,
+  },
+  value: {
+    type: [String, Number] as PropType<string | number>,  
+    required: true,
+  },
+  checked: {
+    type: Boolean,
+    required: true,
+  },
   disabled: {
     type: Boolean,
     default: false,
   },
 });
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: boolean): void;
+}>();
+
+const handleChange = (event: Event) => {
+  const target = event.target as HTMLInputElement; 
+  emit('update:modelValue', target.checked); 
+};
 </script>
 
 <template>
@@ -21,9 +37,10 @@ const emit = defineEmits(['update:modelValue']);
       type="checkbox"
       :value="props.value"
       :checked="checked"
-      @change="$emit('update:modelValue', $event.target.checked)"
+      @change="handleChange"
       :disabled="disabled"
       class="base-checkbox__input"
+      ref="inputRef"
     />
     <span class="base-checkbox__box"></span>
     <span class="base-checkbox__custom-icon" v-if="checked">

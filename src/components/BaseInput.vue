@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
@@ -21,7 +21,15 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['update:modelValue']);
+const handleChange = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  emit('update:modelValue', target.value)
+}
+
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: string): void;
+}>();
+
 </script>
 
 <template>
@@ -31,7 +39,7 @@ const emit = defineEmits(['update:modelValue']);
       :placeholder="placeholder"
       :disabled="disabled"
       :value="modelValue"
-      @input="$emit('update:modelValue', $event.target.value)"
+      @input="handleChange"
       :class="{'disabled': disabled}" 
     />
     <span class="base-input__icon">
